@@ -33,6 +33,7 @@ DEFAULT_IMAGE_OUT_DIR = "./image_out_dir"
 DEFAULT_GRID_OUT_DIR = "./grid_out_dir"
 DEFAULT_THRESHOLD = 70
 DEFAULT_EVAL_DPI = 150
+EDGE_MARGIN = 0.035  # fraction of page ignored at each edge when looking for figures
 WORK_W = 1100  # working width used by the geometry scorer
 
 
@@ -210,15 +211,30 @@ def score_page_geometry(pixmap: fitz.Pixmap) -> tuple[int, int, int, int]:
     return int(total), latt, box, sat
 
 
-def extract_embedded_images(page: fitz.Page, doc: fitz.Document) -> list[np.ndarray]:
-    """Real embedded raster images (XObjects), not page renders."""
-    out: list[np.ndarray] = []
+FULLPAGE_FRAC = 0.60  # an embedded image placed over >= this share of the page is a scan layer, not a figure
+
+
+def _covers_page(page: fitz.Page, xref: int) -> bool:
+    """MRC scans (JPX background + JBIG2 mask) place page-sized layers on every page; skip those."""
+    area = page.rect.width * page.rect.height
+    try:
+        rects = page.get_image_rects(xref)
+    except Exception:
+        return False
+    return any((r.width * r.height) / area >= FULLPAGE_FRAC for r in rects)
+
+
+def extract_embedded_images(page: fitz.Page, doc: fitz.Document, keep_fullpage: bool = False) -> list[tuple[np.ndarray, float]]:
+    """Real embedded raster images (XObjects), not page renders and not page-sized scan layers."""
+    out: list[tuple[np.ndarray, float]] = []
     seen: set[int] = set()
     for img in page.get_images(full=True):
         xref = img[0]
         if xref in seen:
             continue
         seen.add(xref)
+        if not keep_fullpage and _covers_page(page, xref):
+            continue
         try:
             base = doc.extract_image(xref)
         except Exception:
@@ -233,15 +249,171 @@ def extract_embedded_images(page: fitz.Page, doc: fitz.Document) -> list[np.ndar
         h, w = im.shape[:2]
         if w < 80 or h < 80 or w * h < 15_000:
             continue
-        out.append(im)
+        try:
+            r = page.get_image_rects(xref)[0]
+            idpi = w / (r.width / 72.0) if r.width > 0 else 72.0
+        except Exception:
+            idpi = 72.0
+        out.append((im, idpi))
     return out
 
 
-def crop_figures(page: fitz.Page) -> list[np.ndarray]:
+def native_dpi(page: fitz.Page) -> float:
+    """Pixel density of the largest embedded image on the page (the scan itself); 0 if none."""
+    best = 0.0
+    for img in page.get_images(full=True):
+        try:
+            rects = page.get_image_rects(img[0])
+        except Exception:
+            continue
+        for r in rects:
+            if r.width > 0:
+                best = max(best, img[2] / (r.width / 72.0))
+    return best
+
+
+def _big_ink_share(bw: np.ndarray, H: int) -> float:
+    """Share of ink sitting in large connected structures (card borders, wheels, rules, drawn lines).
+    Letters are small components; a paragraph scores ~0, a plate scores high - text INSIDE a plate
+    does not matter because the big structures dominate the ink."""
+    n, _, st, _ = cv2.connectedComponentsWithStats(bw, 8)
+    if n < 2:
+        return 0.0
+    big = np.maximum(st[1:, cv2.CC_STAT_WIDTH], st[1:, cv2.CC_STAT_HEIGHT]) > 0.03 * H
+    area = st[1:, cv2.CC_STAT_AREA].astype(float)
+    return float(area[big].sum() / max(1.0, area.sum()))
+
+
+def _is_text_line(band: np.ndarray, ww: int, H: int) -> bool:
+    """A band (one or several lines) is type if its glyph-sized blobs share one height class and none is huge."""
+    n, _, st, _ = cv2.connectedComponentsWithStats(band, 8)
+    if n < 7:
+        return False
+    big_enough = st[1:, cv2.CC_STAT_AREA] >= 6
+    hs = st[1:, cv2.CC_STAT_HEIGHT][big_enough]
+    ws = st[1:, cv2.CC_STAT_WIDTH][big_enough]
+    if hs.size < 6:
+        return False
+    med = float(np.median(hs))
+    if med > 0.04 * H:
+        return False
+    same = float(((hs >= 0.5 * med) & (hs <= 1.8 * med)).mean())
+    return same >= 0.7 and float(np.percentile(ws, 90)) <= 3.5 * med
+
+
+def nxt_blank_missing(r0: int, r1: int, hh: int, gap_to_fig: int) -> bool:
+    """True when the band is the whole region (nothing left to separate it from)."""
+    return r0 <= 0 and r1 >= hh - 1
+
+
+def _trim_stray_lines(bw, x, y, ww, hh, H):
+    """Drop body-text lines that got fused onto the top or bottom of a figure region.
+    Captions are put back afterwards by _attach_captions."""
+    max_band_h = int(0.12 * H)
+    gap = max(8, int(0.006 * H))
+    cx = x + ww / 2.0
+    for end in ("top", "bottom"):
+        while hh > 0.06 * H:
+            reg = bw[y:y + hh, x:x + ww]
+            rows = reg.any(axis=1)
+            # fuse rows separated by less than `gap` blank rows, so slivers of a clipped
+            # neighbouring line and the line itself form one band
+            rows = np.convolve(rows.astype(np.uint8), np.ones(gap, dtype=np.uint8), mode="same") > 0
+            if end == "top":
+                r0 = int(np.argmax(rows))
+                r1 = r0
+                while r1 + 1 < hh and rows[r1 + 1]:
+                    r1 += 1
+                nxt = r1 + 1
+                while nxt < hh and not rows[nxt]:
+                    nxt += 1
+                gap_to_fig = nxt - r1
+            else:
+                r1 = hh - 1 - int(np.argmax(rows[::-1]))
+                r0 = r1
+                while r0 - 1 >= 0 and rows[r0 - 1]:
+                    r0 -= 1
+                prv = r0 - 1
+                while prv >= 0 and not rows[prv]:
+                    prv -= 1
+                gap_to_fig = r0 - prv
+            band = reg[r0:r1 + 1]
+            if (r1 - r0) > max_band_h or nxt_blank_missing(r0, r1, hh, gap_to_fig):
+                break
+            if not _is_text_line(band, ww, H):
+                break
+            # every text-like band goes (captions are re-attached next, only if centred and adjacent)
+            if end == "top":
+                y, hh = y + r1 + 1, hh - (r1 + 1)
+            else:
+                hh = r0
+    return y, hh
+
+
+def _attach_captions(bw, x, y, ww, hh, max_lines, H, W):
+    """Pull in up to max_lines short, centred text lines directly above/below a figure
+    (titles, captions, labels).  Left-aligned or full-width lines are body text and stay out."""
+    x0, x1 = x, x + ww
+    pad = int(0.10 * ww)
+    cx = (x0 + x1) / 2.0
+    max_gap, max_line_h = int(0.012 * H) * 3, int(0.03 * H)
+
+    def grab(direction):
+        nonlocal y, hh
+        got = 0
+        while got < max_lines:
+            if direction > 0:
+                a, b = y + hh, min(H, y + hh + max_gap + max_line_h)
+            else:
+                a, b = max(0, y - max_gap - max_line_h), y
+            strip = bw[a:b, max(0, x0 - pad): min(W, x1 + pad)]
+            rows = np.where(strip.sum(axis=1) > 0)[0]
+            if rows.size == 0:
+                return
+            if direction > 0:
+                r0 = rows[0]
+                if r0 > max_gap:
+                    return
+                r1 = r0
+                while r1 + 1 < strip.shape[0] and strip[r1 + 1].any():
+                    r1 += 1
+                ys0, ys1 = a + r0, a + r1
+            else:
+                r1 = rows[-1]
+                if (strip.shape[0] - 1 - r1) > max_gap:
+                    return
+                r0 = r1
+                while r0 - 1 >= 0 and strip[r0 - 1].any():
+                    r0 -= 1
+                ys0, ys1 = a + r0, a + r1
+            if ys1 - ys0 > max_line_h:
+                return
+            cols = np.where(bw[ys0:ys1 + 1, max(0, x0 - pad): min(W, x1 + pad)].any(axis=0))[0]
+            if cols.size == 0:
+                return
+            lx0, lx1 = cols[0] + max(0, x0 - pad), cols[-1] + max(0, x0 - pad)
+            if (lx1 - lx0) > 0.9 * ww or abs((lx0 + lx1) / 2.0 - cx) > 0.08 * ww:
+                return
+            if direction > 0:
+                hh = ys1 - y + 1
+            else:
+                hh += y - ys0
+                y = ys0
+            got += 1
+
+    grab(-1)
+    grab(+1)
+    return y, hh
+
+
+def crop_figures(page: fitz.Page, crop_dpi: float, max_caption_lines: int = 2):
     """
-    Geometry crops for scans. Strict text rejection + paragraph-band filter.
+    Find figure regions at 200 dpi, then re-render each region at crop_dpi.
+    Text inside a figure is kept.  Only paragraph-like blocks are rejected.
+    Returns a list of (BGR crop, (x0, y0, x1, y1) in page points).
     """
-    pix = page.get_pixmap(dpi=200)
+    det_dpi = 200
+    pix = page.get_pixmap(dpi=det_dpi)
     raw = np.frombuffer(pix.samples, dtype=np.uint8).reshape(
         (pix.height, pix.width, pix.n)
     )
@@ -250,7 +422,6 @@ def crop_figures(page: fitz.Page) -> list[np.ndarray]:
         gray = cv2.cvtColor(color, cv2.COLOR_BGR2GRAY)
     else:
         gray = raw[:, :, 0]
-        color = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
 
     bw = cv2.adaptiveThreshold(
         gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 31, 10
@@ -267,32 +438,37 @@ def crop_figures(page: fitz.Page) -> list[np.ndarray]:
         return []
 
     xh = int(np.argmax(np.bincount(Hs[keep].astype(int))))
-    if xh < 4:
-        return []
-
-    lo, hi = 0.55 * xh, 1.7 * xh
-    base: dict[int, list[int]] = {}
-    for i in range(1, n):
-        if (
-            lo <= st[i, cv2.CC_STAT_HEIGHT] <= hi
-            and st[i, cv2.CC_STAT_WIDTH] <= W * 0.06
-        ):
-            b = st[i, cv2.CC_STAT_TOP] + st[i, cv2.CC_STAT_HEIGHT]
-            base.setdefault(int(b // max(2, xh // 2)), []).append(i)
-
     text = np.zeros_like(bw)
-    for ids in base.values():
-        if len(ids) >= 6:
-            for i in ids:
-                text[lab == i] = 255
+    if xh >= 4:
+        lo, hi = 0.55 * xh, 1.7 * xh
+        base: dict[int, list[int]] = {}
+        for i in range(1, n):
+            if (
+                lo <= st[i, cv2.CC_STAT_HEIGHT] <= hi
+                and st[i, cv2.CC_STAT_WIDTH] <= W * 0.06
+            ):
+                b = st[i, cv2.CC_STAT_TOP] + st[i, cv2.CC_STAT_HEIGHT]
+                base.setdefault(int(b // max(2, xh // 2)), []).append(i)
+        for ids in base.values():
+            if len(ids) >= 6:
+                for i in ids:
+                    text[lab == i] = 255
 
     fig = bw.copy()
     fig[text > 0] = 0
+    # Scan edges and the library footer fuse with the plate under the closing step and turn it into
+    # one page-sized blob (which is then discarded).  Figures never touch the page edge in print.
+    my, mx = int(EDGE_MARGIN * H), int(EDGE_MARGIN * W)
+    fig[:my, :] = 0
+    fig[H - my:, :] = 0
+    fig[:, :mx] = 0
+    fig[:, W - mx:] = 0
     k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (21, 21))
     cl = cv2.morphologyEx(fig, cv2.MORPH_CLOSE, k, iterations=2)
 
     n2, lab2, st2, _ = cv2.connectedComponentsWithStats(cl, 8)
-    out: list[np.ndarray] = []
+    out = []
+    scale = 72.0 / det_dpi
     for i in range(1, n2):
         x, y, ww, hh, a = st2[i]
         if ww < W * 0.12 or hh < H * 0.10:
@@ -304,18 +480,39 @@ def crop_figures(page: fitz.Page) -> list[np.ndarray]:
             continue
         if aspect < 0.2 and ww < W * 0.22:
             continue
+        if _big_ink_share(bw[y:y + hh, x:x + ww], H) < 0.15:
+            continue  # paragraph block, not a figure
 
-        pad = 16
-        crop = color[
-            max(0, y - pad) : min(H, y + hh + pad),
-            max(0, x - pad) : min(W, x + ww + pad),
-        ]
-        if crop.size == 0:
-            continue
-        if _textiness(crop) > 0.42:
-            continue
-        out.append(crop)
+        y, hh = _trim_stray_lines(bw, x, y, ww, hh, H)
+        if max_caption_lines > 0:
+            y, hh = _attach_captions(bw, x, y, ww, hh, max_caption_lines, H, W)
+        # pad for breathing room, but never into a neighbouring text line
+        PAD = 16
+
+        def room(strip: np.ndarray) -> int:
+            """strip: rows ordered outward from the figure edge. Returns pad that stays ink-free."""
+            if strip.shape[0] == 0:
+                return 0
+            ink = np.where(strip.any(axis=1))[0]
+            return strip.shape[0] if ink.size == 0 else max(0, int(ink[0]) - 1)
+
+        top = room(bw[max(0, y - PAD):y, x:x + ww][::-1])
+        bot = room(bw[y + hh:min(H, y + hh + PAD), x:x + ww])
+        lef = room(bw[y:y + hh, max(0, x - PAD):x][:, ::-1].T)
+        rig = room(bw[y:y + hh, x + ww:min(W, x + ww + PAD)].T)
+        x0, y0 = max(0, x - lef), max(0, y - top)
+        x1, y1 = min(W, x + ww + rig), min(H, y + hh + bot)
+        rect = fitz.Rect(x0 * scale, y0 * scale, x1 * scale, y1 * scale)
+        cp = page.get_pixmap(dpi=crop_dpi, clip=rect)
+        arr = np.frombuffer(cp.samples, dtype=np.uint8).reshape(cp.height, cp.width, cp.n)
+        crop = cv2.cvtColor(arr[:, :, :3], cv2.COLOR_RGB2BGR) if cp.n >= 3 else cv2.cvtColor(arr[:, :, 0], cv2.COLOR_GRAY2BGR)
+        out.append((crop, tuple(rect)))
     return out
+
+
+def save_png(path: str, bgr: np.ndarray, dpi: float) -> None:
+    """Write PNG with the true pixel density in the file (cv2.imwrite leaves it unset -> viewers say 72)."""
+    Image.fromarray(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)).save(path, dpi=(round(dpi), round(dpi)))
 
 
 # ---------------------------------------------------------------------------
@@ -334,6 +531,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                    help="Directory where thumbnail matrix sheets are written")
     p.add_argument("--threshold", "-t", type=int, default=DEFAULT_THRESHOLD,
                    help="Minimum geometry score for a page to be processed")
+    p.add_argument("--keep-fullpage", action="store_true",
+                   help="Also save page-sized embedded layers (MRC scan background/mask); off by default")
+    p.add_argument("--crop-dpi", type=int, default=0,
+                   help="DPI for figure crops (default: max(200, native scan dpi))")
+    p.add_argument("--captions", type=int, default=2,
+                   help="Max centred title/caption lines to attach above and below a figure (0 = off)")
     p.add_argument("--eval-dpi", type=int, default=DEFAULT_EVAL_DPI,
                    help="DPI used for the cheap geometry scoring pass")
     return p.parse_args(argv)
@@ -367,12 +570,12 @@ def main(argv: list[str] | None = None) -> int:
             fig_idx = 0
 
             # 1) Embedded images first
-            embedded = extract_embedded_images(page, doc)
-            for crop in embedded:
+            embedded = extract_embedded_images(page, doc, args.keep_fullpage)
+            for crop, idpi in embedded:
                 out_path = os.path.join(
                     args.image_dir, f"{pdf_name}_p{pn+1}_img{fig_idx}.png"
                 )
-                cv2.imwrite(out_path, crop)
+                save_png(out_path, crop, idpi)
                 fig_idx += 1
             if embedded:
                 print(f"  p{pn+1}: {len(embedded)} embedded image(s)")
@@ -387,14 +590,15 @@ def main(argv: list[str] | None = None) -> int:
                     f"  [HIT] p{pn+1}: score={score} "
                     f"(latt={latt} box={box} sat={sat})"
                 )
-                for crop in crop_figures(page):
+                cdpi = int(round(args.crop_dpi or max(200.0, native_dpi(page))))
+                for crop, _bbox in crop_figures(page, cdpi, args.captions):
                     if crop.size == 0:
                         continue
                     out_path = os.path.join(
                         args.image_dir,
                         f"{pdf_name}_p{pn+1}_fig{fig_idx}.png",
                     )
-                    cv2.imwrite(out_path, crop)
+                    save_png(out_path, crop, cdpi)
                     fig_idx += 1
 
             if fig_idx > 0 or score >= args.threshold:
