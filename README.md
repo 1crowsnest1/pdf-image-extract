@@ -1,96 +1,56 @@
-<pre style="font-family:'Courier New',Courier,monospace;font-size:12px;line-height:1.17;white-space:pre;background-color:#000;color:#fff;padding:8px;margin:0;"><span style="color:#FFFFFF">┌▄───</span><span style="color:#55FFFF">──</span><span style="color:#AAAAAA">──</span><span style="color:#00AAAA">─┐</span><span style="color:#FFFFFF">┌▄──</span><span style="color:#55FFFF">─</span><span style="color:#00AAAA">────┐</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">┌▄─</span><span style="color:#55FFFF">──</span><span style="color:#00AAAA">────┐</span><span style="color:#AAAAAA">        </span><span style="color:#FFFFFF">┌▄</span><span style="color:#55FFFF">─┐</span><span style="color:#FFFFFF">┌▄───</span><span style="color:#55FFFF">───</span><span style="color:#00AAAA">─────┐</span><span style="color:#FFFFFF">┌▄──</span><span style="color:#55FFFF">───</span><span style="color:#00AAAA">──┐</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">┌▄</span><span style="color:#55FFFF">───</span><span style="color:#AAAAAA">───</span><span style="color:#00AAAA">─┐</span><span style="color:#FFFFFF">┌▄─</span><span style="color:#55FFFF">──</span><span style="color:#AAAAAA">─</span><span style="color:#00AAAA">───┐</span><span style="color:#AAAAAA">    </span>
-<span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓▓</span><span style="color:#555555">┌</span><span style="color:#00AAAA">───</span><span style="color:#55FFFF">┐</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓│</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">·</span><span style="color:#555555">┌─</span><span style="color:#00AAAA">──┐</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">└┐</span><span style="color:#FFFFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓</span><span style="color:#555555">┌─</span><span style="color:#00AAAA">───</span><span style="color:#555555">─┘</span><span style="color:#AAAAAA">        </span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓▓│</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">·</span><span style="color:#555555">┌</span><span style="color:#00AAAA">─┐▓▓</span><span style="color:#555555">┌</span><span style="color:#00AAAA">─┐</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓│</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">.</span><span style="color:#00AAAA">┌──</span><span style="color:#55FFFF">┐</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">│</span><span style="color:#FFFFFF">┌┘</span><span style="color:#AAAAAA">·</span><span style="color:#555555">┌──</span><span style="color:#00AAAA">────┘</span><span style="color:#FFFFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓┌──</span><span style="color:#555555">───┘</span><span style="color:#AAAAAA">    </span>
-<span style="color:#55FFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▒└─</span><span style="color:#55FFFF">─</span><span style="color:#FFFFFF">─┘</span><span style="color:#00AAAA">▒▒</span><span style="color:#555555">│</span><span style="color:#55FFFF">│</span><span style="color:#AAAAAA">.</span><span style="color:#00AAAA">▒</span><span style="color:#555555">│</span><span style="color:#AAAAAA">   </span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">▒▒│</span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">▒▒└──</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA">           </span><span style="color:#55FFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▒│</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▒▒│</span><span style="color:#AAAAAA"> </span><span style="color:#00AAAA">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▒│</span><span style="color:#AAAAAA"> </span><span style="color:#00AAAA">│▒</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">│</span><span style="color:#55FFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▒└</span><span style="color:#55FFFF">─</span><span style="color:#FFFFFF">─┘</span><span style="color:#00AAAA">▒▒│</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▒▒</span><span style="color:#555555">│</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">┌</span><span style="color:#AAAAAA">▄</span><span style="color:#55FFFF">──</span><span style="color:#00AAAA">─┐</span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">▒▒└─</span><span style="color:#55FFFF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA">       </span>
-<span style="color:#00AAAA">│░░┌─────</span><span style="color:#555555">─┘</span><span style="color:#00AAAA">│░░│</span><span style="color:#AAAAAA">   </span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">░░││░░┌──┘</span><span style="color:#AAAAAA">           </span><span style="color:#00AAAA">│░░│</span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">░░│</span><span style="color:#AAAAAA"> </span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">░░│</span><span style="color:#AAAAAA"> </span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">░░││░░┌──</span><span style="color:#55FFFF">┐</span><span style="color:#00AAAA">░░│</span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">░░│</span><span style="color:#AAAAAA"> </span><span style="color:#55FFFF">└─</span><span style="color:#00AAAA">│░░│├░░┌──┘</span><span style="color:#AAAAAA">       </span>
-<span style="color:#00AAAA">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">│</span><span style="color:#AAAAAA">       </span><span style="color:#00AAAA">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">└─</span><span style="color:#55FFFF">─</span><span style="color:#AAAAAA">─</span><span style="color:#FFFFFF">┘</span><span style="color:#555555">═┌┘</span><span style="color:#00AAAA">│</span><span style="color:#555555">══│</span><span style="color:#AAAAAA">              </span><span style="color:#00AAAA">│</span><span style="color:#555555">══│</span><span style="color:#AAAAAA">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">│</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">│</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">││</span><span style="color:#555555">══│</span><span style="color:#AAAAAA">  </span><span style="color:#FFFFFF">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">│└┐</span><span style="color:#555555">═</span><span style="color:#00AAAA">└───┘</span><span style="color:#555555">══│</span><span style="color:#00AAAA">├</span><span style="color:#555555">══</span><span style="color:#00AAAA">└────</span><span style="color:#FFFFFF">─┐</span><span style="color:#AAAAAA">    </span>
-<span style="color:#00AAAA">└──┘</span><span style="color:#AAAAAA">       </span><span style="color:#00AAAA">└────────</span><span style="color:#555555">┘</span><span style="color:#AAAAAA"> </span><span style="color:#00AAAA">└─</span><span style="color:#555555">─┘</span><span style="color:#AAAAAA">              </span><span style="color:#00AAAA">└─</span><span style="color:#555555">─┘</span><span style="color:#00AAAA">└──┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#00AAAA">──┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#00AAAA">──┘└─</span><span style="color:#555555">─┘</span><span style="color:#AAAAAA">  </span><span style="color:#FFFFFF">└─</span><span style="color:#55FFFF">─</span><span style="color:#00AAAA">┘</span><span style="color:#AAAAAA"> </span><span style="color:#00AAAA">└───────</span><span style="color:#555555">─┘</span><span style="color:#00AAAA">└──────</span><span style="color:#AAAAAA">─</span><span style="color:#55FFFF">─┘</span><span style="color:#AAAAAA">    </span>
-<span style="color:#AAAAAA">    </span><span style="color:#FFFFFF">┌▄─</span><span style="color:#55FFFF">──</span><span style="color:#AAAAAA">─</span><span style="color:#00AAAA">───┐</span><span style="color:#FFFFFF">┌▄</span><span style="color:#55FFFF">─</span><span style="color:#00AAAA">┐</span><span style="color:#AAAAAA">  </span><span style="color:#FFFFFF">┌▄</span><span style="color:#55FFFF">─</span><span style="color:#00AAAA">┐</span><span style="color:#FFFFFF">┌▄───</span><span style="color:#55FFFF">──</span><span style="color:#00AAAA">──┐</span><span style="color:#FFFFFF">┌▄───</span><span style="color:#55FFFF">──</span><span style="color:#AAAAAA">─</span><span style="color:#00AAAA">──┐</span><span style="color:#FFFFFF">┌▄──</span><span style="color:#55FFFF">───</span><span style="color:#00AAAA">──┐</span><span style="color:#FFFFFF">┌▄──</span><span style="color:#55FFFF">─</span><span style="color:#AAAAAA">─</span><span style="color:#00AAAA">───┐</span><span style="color:#FFFFFF">┌▄───</span><span style="color:#55FFFF">──</span><span style="color:#00AAAA">──┐</span><span style="color:#FFFFFF">┌▄──</span><span style="color:#55FFFF">──</span><span style="color:#AAAAAA">──</span><span style="color:#00AAAA">─┐</span><span style="color:#FFFFFF">┌▄───</span><span style="color:#55FFFF">──</span><span style="color:#AAAAAA">─</span><span style="color:#00AAAA">──┐</span>
-<span style="color:#AAAAAA">    </span><span style="color:#FFFFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓┌──</span><span style="color:#555555">───┘</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">.</span><span style="color:#00AAAA">│</span><span style="color:#AAAAAA">  </span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">│</span><span style="color:#FFFFFF">└</span><span style="color:#00AAAA">──┐</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓┌──┘</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓▓┌──</span><span style="color:#AAAAAA">─</span><span style="color:#55FFFF">┐</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓│</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">.</span><span style="color:#00AAAA">┌──</span><span style="color:#55FFFF">┐</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">│</span><span style="color:#FFFFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓</span><span style="color:#555555">┌─</span><span style="color:#00AAAA">──</span><span style="color:#555555">──┘</span><span style="color:#FFFFFF">└</span><span style="color:#00AAAA">──┐</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓┌──┘</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">.</span><span style="color:#555555">┌─</span><span style="color:#00AAAA">─</span><span style="color:#AAAAAA">┐</span><span style="color:#00AAAA">▓</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">│</span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">▓▓┌──</span><span style="color:#AAAAAA">─</span><span style="color:#55FFFF">┐</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▓│</span>
-<span style="color:#AAAAAA">    </span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">▒▒└─</span><span style="color:#55FFFF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA">   </span><span style="color:#55FFFF">└</span><span style="color:#00AAAA">┐▒└──┘▒┌┘</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">│▒▒│</span><span style="color:#AAAAAA">   </span><span style="color:#55FFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▒└─</span><span style="color:#FFFFFF">──┘</span><span style="color:#00AAAA">▒▒│</span><span style="color:#55FFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▒└</span><span style="color:#55FFFF">─</span><span style="color:#FFFFFF">─┘</span><span style="color:#00AAAA">▒▒│</span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">▒▒│</span><span style="color:#AAAAAA">         </span><span style="color:#00AAAA">│▒▒│</span><span style="color:#AAAAAA">   </span><span style="color:#55FFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▒</span><span style="color:#555555">│</span><span style="color:#AAAAAA">  </span><span style="color:#55FFFF">│</span><span style="color:#00AAAA">▒▒│</span><span style="color:#55FFFF">│</span><span style="color:#AAAAAA">·</span><span style="color:#00AAAA">▒└─</span><span style="color:#FFFFFF">──┘</span><span style="color:#00AAAA">▒▒│</span>
-<span style="color:#AAAAAA">    </span><span style="color:#00AAAA">├░░┌──┘</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">│░░┌──┐░░│</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">│░░│</span><span style="color:#AAAAAA">   │</span><span style="color:#00AAAA">░░┌─┐░░┌─┘│░░┌──</span><span style="color:#55FFFF">┐</span><span style="color:#00AAAA">░░││░░│</span><span style="color:#AAAAAA">         </span><span style="color:#00AAAA">│░░│</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">│░░│</span><span style="color:#AAAAAA">  </span><span style="color:#FFFFFF">│</span><span style="color:#00AAAA">░░│</span><span style="color:#AAAAAA">│</span><span style="color:#00AAAA">░░┌─┐░░┌─┘</span>
-<span style="color:#AAAAAA">    </span><span style="color:#00AAAA">├</span><span style="color:#555555">══</span><span style="color:#00AAAA">└────</span><span style="color:#FFFFFF">─┐</span><span style="color:#00AAAA">│</span><span style="color:#555555">══│</span><span style="color:#AAAAAA">  </span><span style="color:#00AAAA">│</span><span style="color:#555555">══│</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">│</span><span style="color:#555555">══│</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">│</span><span style="color:#AAAAAA"> </span><span style="color:#00AAAA">└</span><span style="color:#FFFFFF">┐</span><span style="color:#555555">═</span><span style="color:#00AAAA">└─┐│</span><span style="color:#555555">══│</span><span style="color:#AAAAAA">  </span><span style="color:#FFFFFF">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">││</span><span style="color:#555555">══</span><span style="color:#00AAAA">└────</span><span style="color:#FFFFFF">─┐</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">│</span><span style="color:#555555">══│</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">└─</span><span style="color:#FFFFFF">─┘</span><span style="color:#555555">══│</span><span style="color:#00AAAA">│</span><span style="color:#555555">══</span><span style="color:#00AAAA">│</span><span style="color:#AAAAAA"> </span><span style="color:#00AAAA">└</span><span style="color:#FFFFFF">┐</span><span style="color:#555555">═</span><span style="color:#00AAAA">└─┐</span>
-<span style="color:#AAAAAA">    </span><span style="color:#00AAAA">└──────</span><span style="color:#AAAAAA">─</span><span style="color:#55FFFF">─┘</span><span style="color:#00AAAA">└</span><span style="color:#555555">──┘</span><span style="color:#AAAAAA">  </span><span style="color:#00AAAA">└</span><span style="color:#555555">──┘</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">└</span><span style="color:#555555">──┘</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">└──┘</span><span style="color:#AAAAAA">  </span><span style="color:#FFFFFF">└─</span><span style="color:#00AAAA">──┘└─</span><span style="color:#555555">─┘</span><span style="color:#AAAAAA">  </span><span style="color:#FFFFFF">└─</span><span style="color:#55FFFF">─</span><span style="color:#00AAAA">┘└────────┘</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">└</span><span style="color:#555555">──┘</span><span style="color:#AAAAAA">   </span><span style="color:#00AAAA">└──────</span><span style="color:#555555">──┘</span><span style="color:#00AAAA">└──┘</span><span style="color:#AAAAAA">  </span><span style="color:#FFFFFF">└─</span><span style="color:#00AAAA">──┘</span></pre>
-
 # PDF Image Extractor
 
 Heuristically detect and extract figures, diagrams and illustration grids from PDF files.
 
-The tool first scores every page with a fast geometry-based detector (looking for lattices, regular boxes and satellite blobs). Pages that pass a configurable threshold are rendered at higher resolution; text-like regions are masked out and the remaining large connected components are cropped and saved as PNG files. Low-resolution thumbnail matrix sheets are also produced for quick visual review.
+Pages are scored with a fast geometry detector (lattices, regular boxes, satellite blobs). High-scoring pages are cropped after text masking. **Embedded raster images** are always extracted when present.
 
 ## Features
 
-- Pure-Python, no external system dependencies beyond the listed packages
-- Geometry scoring (Hough lattices + box grids + satellite blobs) to skip text-only pages
-- Text-region suppression before cropping so pure-text blocks are rarely saved
-- Configurable input / output directories and score threshold via CLI
-- Thumbnail contact sheets (8×8) written as JPEG for rapid browsing
+- Embedded image extraction (`page.get_images`) → `*_imgN.png`
+- Geometry scoring + strict text rejection → `*_figN.png`
+- Paragraph-band filter (rejects wide, shallow text blocks)
+- 8×8 thumbnail matrix sheets for quick review
+- Configurable threshold and evaluation DPI
 
 ## Installation
 
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-python3 -m pip install -r requirements.txt
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-## Quick start
-
-1. Put the PDFs you want to process into a directory (default: `./dest_dir`).
-2. Run:
+## Usage
 
 ```bash
+# defaults: ./pdfs → ./image_out_dir + ./grid_out_dir
 python pdf_image_extract.py
-```
 
-Extracted figures appear in `./image_out_dir` as
-
-```
-<pdfname>_p<page>_fig<n>.png
-```
-
-Thumbnail matrix sheets appear in `./grid_out_dir`.
-
-### Useful options
-
-```bash
-python pdf_image_extract.py \
-  --input-dir  /path/to/pdfs \
-  --image-dir  /path/to/figures \
-  --grid-dir   /path/to/thumbnails \
-  --threshold  80 \
-  --eval-dpi   120
+python pdf_image_extract.py -i ./pdfs -o ./figures -g ./sheets -t 80
 ```
 
 | Flag | Default | Meaning |
 |------|---------|---------|
-| `-i / --input-dir` | `./dest_dir` | Folder containing source PDFs |
-| `-o / --image-dir` | `./image_out_dir` | Where cropped PNG figures are written |
-| `-g / --grid-dir` | `./grid_out_dir` | Where thumbnail matrix sheets are written |
-| `-t / --threshold` | `70` | Minimum geometry score required to process a page |
-| `--eval-dpi` | `150` | DPI used for the cheap scoring pass |
+| `-i / --input-dir` | `./pdfs` | Source PDFs |
+| `-o / --image-dir` | `./image_out_dir` | Cropped figures |
+| `-g / --grid-dir` | `./grid_out_dir` | Contact sheets |
+| `-t / --threshold` | `70` | Min geometry score |
+| `--eval-dpi` | `150` | Scoring pass DPI |
 
-## How the scoring works
-
-Three independent detectors contribute to a page score:
+## Scoring
 
 | Detector | Weight | Looks for |
 |----------|--------|-----------|
-| Lattice  | ×1     | Intersecting horizontal / vertical Hough lines forming a grid |
-| Box      | ×9     | Regularly sized and spaced rectangular contours |
-| Satellite| ×8     | Multiple mid-sized blobs arranged around a centre |
+| Lattice | ×2 | H/V grid lines |
+| Box | ×9 | Regular rectangular contours |
+| Satellite | ×7 | Mid-sized blobs around centre |
 
-A page whose total score exceeds `--threshold` is considered figure-rich and is sent to the cropping stage.
+## Output naming
 
-## Limitations & tips
-
-- The heuristics are tuned for scanned technical / scientific material. Highly artistic or photographic pages may need a lower threshold or manual review.
-- Very large PDFs (hundreds of pages) are processed sequentially; memory usage stays modest because only one page is rendered at a time.
-- The text-masking step uses a simple height-histogram heuristic; dense multi-column text can occasionally leak into crops. Raising the `_textiness` cutoff (currently 0.68) makes the filter stricter.
+- `{name}_p{page}_img{n}.png` — embedded images  
+- `{name}_p{page}_fig{n}.png` — geometry crops  
+- `{name}_matrix_sheet_{n}.jpg` — contact sheets  
 
 ## License
 
 MIT – see [LICENSE](LICENSE).
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
